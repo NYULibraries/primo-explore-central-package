@@ -31,14 +31,14 @@ test: &test
   run:
     name: Run E2E Tests
     command: |
-      docker-compose run e2e cypress run --reporter junit --reporter-options "mochaFile=test-results/test-output.xml"
+      docker-compose run e2e cypress run --reporter junit --reporter-options "mochaFile=test-results/results-[hash].xml"
 
 store-test: &store-test
   run:
-    name: Copy testing store_artifacts
+    name: Copy testing artifacts
     when: always
     command: |
-      docker cp "$(docker ps -q -a -l -f name=e2e)":/app/cypress cypress
+      docker cp "$(docker ps -q -a -l -f name=e2e)":/app/cypress cypress-results
       docker cp "$(docker ps -q -a -l -f name=e2e)":/app/test-results test-results
 
 
@@ -56,9 +56,9 @@ jobs:
       - <<: *store-test
       - <<: *push_docker
       - store_artifacts:
-          path: cypress/videos
+          path: cypress-results/videos
       - store_artifacts:
-          path: cypress/screenshots
+          path: cypress-results/screenshots
       - store_artifacts:
           path: test-results
       - store_test_results:
