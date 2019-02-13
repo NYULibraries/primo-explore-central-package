@@ -46,7 +46,6 @@ services:
       - web
 
   e2e:
-    container_name: central-package-e2e
     image: primo-explore-central-package-cypress
     build:
       <<: *x-build

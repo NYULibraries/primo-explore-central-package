@@ -38,8 +38,8 @@ store-test: &store-test
     name: Copy testing store_artifacts
     when: always
     command: |
-      docker cp "$(docker ps -q -a -f name=central_package_e2e)":/app/cypress cypress-results
-      docker cp "$(docker ps -q -a -f name=central_package_e2e)":/app/test-results test-results
+      docker cp "$(docker ps -q -a -l -f name=e2e)":/app/cypress cypress-results
+      docker cp "$(docker ps -q -a -l -f name=e2e)":/app/test-results test-results
 
 
 version: 2
