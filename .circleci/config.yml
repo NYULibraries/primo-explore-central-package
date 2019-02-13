@@ -41,6 +41,13 @@ store-test: &store-test
       docker cp "$(docker ps -q -a -l -f name=e2e)":/app/cypress cypress-results
       docker cp "$(docker ps -q -a -l -f name=e2e)":/app/test-results test-results
 
+create-package: &create-package
+  run:
+    name: Build asset package and store
+    command: |
+      export NODE_ENV=$([[ $CIRCLE_BRANCH = master ]] && echo "production" || echo "staging")
+      docker-compose run create-package
+      docker cp "$(docker ps -q -a -l -f name=create-package)":/app/packages packages
 
 version: 2
 jobs:
@@ -63,9 +70,19 @@ jobs:
           path: test-results
       - store_test_results:
           path: test-results
+  create-package:
+    <<: *docker-defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - <<: *pull_docker
+      - <<: *create-package
+      - store_artifacts:
+        path: packages
 
 workflows:
   version: 2
   build:
     jobs:
       - build-and-test
+      - create-package
