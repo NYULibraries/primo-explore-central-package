@@ -17,7 +17,7 @@ x-defaults: &x-defaults
   environment:
     <<: *x-environment
   # volumes:
-    # - ./:/app/primo-explore/custom/CENTRAL_PACKAGE
+  #   - ./:/app/primo-explore/custom/CENTRAL_PACKAGE
 
 version: '3.7'
 services:
@@ -46,6 +46,7 @@ services:
       - web
 
   e2e:
+    container_name: central-package-e2e
     image: primo-explore-central-package-cypress
     build:
       <<: *x-build
@@ -58,3 +59,4 @@ services:
       CYPRESS_BASE_URL: http://web-test:8004/primo-explore/search
     # volumes:
       # - ./cypress/:/app/cypress
+      # - ./results:/app/results
