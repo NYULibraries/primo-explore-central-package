@@ -7,9 +7,10 @@ ENV CUSTOM_VIEW_PATH ${CUSTOM_PACKAGE_PATH}/${VIEW}
 
 WORKDIR ${CUSTOM_VIEW_PATH}
 
-ADD . .
-
+ADD yarn.lock package.json ./
 RUN yarn install --prod
+
+ADD . .
 
 WORKDIR ${DEVENV_PATH}
 
@@ -17,4 +18,4 @@ EXPOSE 8004 3001
 
 RUN VIEW=${VIEW} yarn build
 
-CMD yarn start --host=0.0.0.0
+CMD yarn start

@@ -26,28 +26,35 @@ services:
     ports:
     - 8004:8004
     - 3001:3001
-    command: yarn start:dev --host 0.0.0.0
+  web-test:
+    <<: *x-defaults
+    environment:
+      <<: *x-environment
+      NODE_ENV: test
+    ports:
+    - 8004:8004
+    - 3001:3001
+
   create-package:
     <<: *x-defaults
     environment:
       <<: *x-environment
       NODE_ENV: ${NODE_ENV-staging}
       PACK: 'true'
-    command: yarn webpack
+    command: yarn build
     depends_on:
       - web
+
   e2e:
-    image: primo-explore-cypress
+    image: primo-explore-central-package-cypress
     build:
       <<: *x-build
       args: {}
       dockerfile: cypress/Dockerfile
-    command: yarn cypress run # --browser chrome
+    # command: cypress run --browser chrome
     depends_on:
-      - web
+      - web-test
     environment:
-      <<: *x-environment
-      NODE_ENV: test
-      CYPRESS_BASE_URL: http://web:8004/primo-explore/search
+      CYPRESS_BASE_URL: http://web-test:8004/primo-explore/search
     volumes:
       - ./cypress/:/app/cypress

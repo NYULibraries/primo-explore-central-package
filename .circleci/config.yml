@@ -7,7 +7,7 @@ build_docker: &build_docker
   run:
     name: Build Docker
     command: |
-      docker-compose build web
+      docker-compose build web e2e
 
 auth_quay: &auth_quay
   run:
@@ -27,9 +27,15 @@ push_docker: &push_docker
     command: |
       script/push_docker.sh
 
+test: &test
+  run:
+    name: Run E2E Tests
+    command: |
+      docker-compose run e2e
+
 version: 2
 jobs:
-  build:
+  build-and-test:
     <<: *docker-defaults
     steps:
       - checkout
@@ -37,6 +43,7 @@ jobs:
       - <<: *auth_quay
       - <<: *pull_docker
       - <<: *build_docker
+      - <<: *test
       - <<: *push_docker
 
 workflows:
