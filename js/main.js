@@ -1,7 +1,3 @@
-import '../css/main.scss';
-
-import 'primo-explore-custom-no-search-results/css/custom1.css';
-
 import 'primo-explore-custom-no-search-results';
 
 let app = angular.module('centralCustom', [
